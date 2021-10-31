@@ -1,0 +1,61 @@
+#VRML_SIM R2021b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation 1 1.186733900655185e-14 -7.830848985559002e-15 5.358638980384661
+  position -0.02305041201587928 1.1599957381530326 0.8762171438077148
+}
+Background {
+  skyColor [
+    0.4 0.7 1
+  ]
+}
+DirectionalLight {
+  ambientIntensity 1
+  direction 0.1 -0.5 0.3
+}
+RectangleArena {
+  floorSize 2 2
+  floorAppearance PBRAppearance {
+    roughness 1
+    roughnessMap ImageTexture {
+      url [
+        "textures/parquetry/chequered_parquetry_roughness.jpg"
+      ]
+    }
+    metalness 0
+    normalMap ImageTexture {
+      url [
+        "textures/parquetry/chequered_parquetry_normal.jpg"
+      ]
+    }
+    occlusionMap ImageTexture {
+      url [
+        "textures/parquetry/chequered_parquetry_occlusion.jpg"
+      ]
+    }
+  }
+  wallHeight 0.05
+}
+TrackOne {
+  translation 0 -0.0075 0
+}
+DEF e-Puck E-puck {
+  translation -1.32714e-13 -6.39682e-05 0.115
+  rotation 2.9767368044306463e-06 0.999999999991132 2.9791082030022605e-06 1.5700000000088667
+  controller "line_follower"
+  supervisor TRUE
+  groundSensorsSlot [
+    DEF IR1 DistanceSensor {
+      translation 0 0.003 0
+      name "IR1"
+      type "infra-red"
+    }
+    DEF IR0 DistanceSensor {
+      translation 0 -0.003 0
+      name "IR0"
+      type "infra-red"
+    }
+  ]
+}
