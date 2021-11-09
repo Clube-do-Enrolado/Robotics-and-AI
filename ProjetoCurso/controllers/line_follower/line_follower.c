@@ -1,9 +1,12 @@
 /*
- * File:          SegueLinha.c
+ * File:          ARRV9939.c
  * Date:          31/10/2021
  * Description:   Algoritmo para que o robô siga a linha de um percurso.
- * Author:        Vitor Acosta
- * Modifications: 
+ * Author:        Andy Barbosa
+ *                Rafael Palierini
+ *                Rubens Mendes
+ *                Vitor Acosta
+ *  
  */
 
 
@@ -22,11 +25,13 @@
 
 // Percentual de velocidade que será
 // aplicado aos motores
-#define MOTOR_INTENSITY 0.25
+#define MOTOR_INTENSITY 0.9
+
+#define FORWARD_INTENSITY 0.7
 
 #define IR_THRESHOLD 0.1
 
-#define IR_TRACK_VALUE 6
+#define IR_TRACK_VALUE 5
 
 // Motores do E-Puck
 static WbDeviceTag left_motor, right_motor;
@@ -38,9 +43,9 @@ double ps_values[8];
 
 // Sensores IR (infra-vermelho) para detectar
 // a linha do percurso.
-static WbDeviceTag left_ground, right_ground;
+static WbDeviceTag left_ground, right_ground, rg_back, lg_back;
 // Leitura da saída dos sensores
-static double left_ground_value, right_ground_value;
+static double left_ground_value, right_ground_value, rg_back_value, lg_back_value;
 
 // Tempo da simulação
 int time_step;
@@ -82,9 +87,10 @@ void motor_stop(){
  * Fazendo que o robô vá para frente.
  */
 void motor_move_forward(){
-  wb_motor_set_velocity(left_motor, MOTOR_INTENSITY*MAX_SPEED);
-  wb_motor_set_velocity(right_motor, MOTOR_INTENSITY*MAX_SPEED);
+  wb_motor_set_velocity(left_motor, FORWARD_INTENSITY*MAX_SPEED);
+  wb_motor_set_velocity(right_motor, FORWARD_INTENSITY*MAX_SPEED);
 }
+
 
 /*
  * Função que define velocidade negativa máxima ao motor esquerdo
@@ -149,6 +155,12 @@ void init(){
   wb_distance_sensor_enable(left_ground, time_step);
   right_ground = wb_robot_get_device("IR1");
   wb_distance_sensor_enable(right_ground,time_step);
+   // Inicializa os sensores de IR do solo.
+   
+  lg_back = wb_robot_get_device("IR00");
+  wb_distance_sensor_enable(lg_back, time_step);
+  rg_back = wb_robot_get_device("IR11");
+  wb_distance_sensor_enable(rg_back,time_step);
   
 }
 
@@ -160,42 +172,41 @@ int main(int argc, char **argv) {
   init();
   
   while (true) {
-    // Obtenção dos valores indicados nos
-    // sensores de proximidade
-    for (int i = 0; i < 8; i++)
-      ps_values[i] = wb_distance_sensor_get_value(ps[i]);
-      
-    bool right_obstacle =  ps_values[0] > 140.0 ||
-                          ps_values[1] > 140.0;
-    bool left_obstacle =   ps_values[6] > 140.0 ||
-                          ps_values[7] > 140.0;
-      
-    
+        
     left_ground_value = wb_distance_sensor_get_value(left_ground);
     right_ground_value = wb_distance_sensor_get_value(right_ground);
+    
+    lg_back_value = wb_distance_sensor_get_value(lg_back);
+    rg_back_value = wb_distance_sensor_get_value(rg_back);
     
     printf("\nGround Sensors Values: \n(Left)%4.4f\n(Right)%4.4f\n",
     left_ground_value,
     right_ground_value);
     
-    motor_move_forward();
+    printf("\nBack Ground Sensors Values: \n(Left)%4.4f\n(Right)%4.4f\n",
+    lg_back_value,
+    rg_back_value);
     
-    if( (left_ground_value > right_ground_value) &&
-        (IR_TRACK_VALUE - IR_THRESHOLD < left_ground_value && left_ground_value < 15)){
+    /*if ( 
+     (left_ground_value >= 3 && left_ground_value <= 5) &&
+     (right_ground_value >= 3 && right_ground_value <= 5)
+     )
       motor_rotate_left();
-    }
-    else if( (right_ground_value > left_ground_value) &&
-        (IR_TRACK_VALUE - IR_THRESHOLD < right_ground_value && left_ground_value < 15)){
-      motor_rotate_right();
-    }
+    else{  */
+      motor_move_forward();    
+    
+      if( (left_ground_value > right_ground_value + 0.5) &&
+          (IR_TRACK_VALUE - IR_THRESHOLD < left_ground_value && left_ground_value < 15)){
+        printf("\nVirando Esquerda\n");
+        motor_rotate_left();
+       }
+       else if( (right_ground_value > left_ground_value + 0.5) &&
+          (IR_TRACK_VALUE - IR_THRESHOLD < right_ground_value && left_ground_value < 15)){
+        printf("\nVirando Direita\n");
+        motor_rotate_right();
+       }
+       //}
 
-    /*if (GroundD_Valor<5 || GroundE_Valor<5){
-      if (GroundD_Valor<5) Velocidades[LEFT] = -Velocidades[LEFT]*1;
-      else if (GroundE_Valor<5) Velocidades[RIGHT] = -Velocidades[RIGHT]*1;
-    }
-    wb_motor_set_velocity(motorE, Velocidades[LEFT]);
-    wb_motor_set_velocity(motorD, Velocidades[RIGHT]); 
-    */
     step();
   }
 }

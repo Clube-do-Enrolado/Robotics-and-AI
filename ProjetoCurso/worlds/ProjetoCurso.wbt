@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 1 1.186733900655185e-14 -7.830848985559002e-15 5.358638980384661
-  position -0.02305041201587928 1.1599957381530326 0.8762171438077148
+  orientation 0.998755640038149 0.02876182807495021 -0.0407422230342728 5.20950143243243
+  position -0.10733482543414656 0.9568595026999221 0.6620526877243489
 }
 Background {
   skyColor [
@@ -42,11 +42,25 @@ TrackOne {
   translation 0 -0.0075 0
 }
 DEF e-Puck E-puck {
-  translation -1.32714e-13 -6.39682e-05 0.115
-  rotation 2.9767368044306463e-06 0.999999999991132 2.9791082030022605e-06 1.5700000000088667
+  hidden linearVelocity_0 -0.05050473099043151 2.5417733788420568e-06 -3.946642412225146e-05
+  hidden angularVelocity_0 -0.00037165951860999467 -1.2822655855151879e-05 0.43652683341812604
+  hidden rotation_1 -1 0 0 0.14067199844232878
+  hidden rotation_2 -1 0 0 0.14067199896703925
+  translation -0.0028132706890953503 -6.23665627191277e-05 0.11799779540934534
+  rotation 0.00712689802206148 0.9999492833444767 -0.007116042681892127 1.5700513269790273
   controller "line_follower"
   supervisor TRUE
   groundSensorsSlot [
+    DEF IR00 DistanceSensor {
+      translation 0 -0.003 0.01
+      name "IR00"
+      type "infra-red"
+    }
+    DEF IR11 DistanceSensor {
+      translation 0 0.003 0.01
+      name "IR11"
+      type "infra-red"
+    }
     DEF IR1 DistanceSensor {
       translation 0 0.003 0
       name "IR1"
