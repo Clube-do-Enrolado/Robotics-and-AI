@@ -1,4 +1,4 @@
-build/release/line_follower.o: line_follower.c \
+build/release/ARRV9939.o: ARRV9939.c \
  /usr/local/webots/include/controller/c/webots/robot.h \
  /usr/local/webots/include/controller/c/webots/types.h \
  /usr/local/webots/include/controller/c/webots/nodes.h \

@@ -48,7 +48,7 @@ DEF e-Puck E-puck {
   hidden rotation_2 -1 0 0 0.14067199896703925
   translation -0.0028132706890953503 -6.23665627191277e-05 0.11799779540934534
   rotation 0.00712689802206148 0.9999492833444767 -0.007116042681892127 1.5700513269790273
-  controller "line_follower"
+  controller "ARRV9939"
   supervisor TRUE
   groundSensorsSlot [
     DEF IR00 DistanceSensor {
